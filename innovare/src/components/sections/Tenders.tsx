@@ -5,38 +5,49 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { tenders } from "@/content/site";
 
-/** Licitações: seção de destaque em verde-escuro com cartão lateral em oliva. */
+/** Licitações: destaque em verde-escuro, entregas em cartões dourados e faixa de CTA do edital. */
 export function Tenders() {
   return (
     <section id="licitacoes" aria-labelledby="licitacoes-title" className="bg-deep grain arc-top overflow-hidden">
-      <div className="container-x section-y grid gap-14 lg:grid-cols-12">
-        <div className="lg:col-span-7">
-          <SectionHeading eyebrow={tenders.eyebrow} title={tenders.title} id="licitacoes-title" tone="light" titleClassName="max-w-[17ch] text-cream" />
-          <div className="mt-8 max-w-2xl space-y-5">
+      <div className="container-x section-y">
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <SectionHeading eyebrow={tenders.eyebrow} title={tenders.title} id="licitacoes-title" tone="light" className="lg:col-span-7" titleClassName="max-w-[22ch] text-cream" />
+          <div className="space-y-4 lg:col-span-5">
             {tenders.paragraphs.map((p, i) => (
               <Reveal key={i} delay={0.1 * i}>
-                <p className="lead text-cream/75">{p}</p>
+                <p className="text-[1.02rem] leading-relaxed text-cream/75">{p}</p>
               </Reveal>
             ))}
           </div>
-          <RevealGroup as="ul" className="mt-12 grid gap-3 sm:grid-cols-2">
-            {tenders.deliverables.map((d) => (
-              <RevealItem as="li" key={d.text} className="glass flex items-center gap-4 rounded-[22px] p-5 transition-colors duration-700 hover:border-gold/50">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full border border-gold/40 text-gold">
-                  <Icon name={d.icon} className="size-5" />
-                </span>
-                <span className="text-[0.98rem] text-cream/90">{d.text}</span>
-              </RevealItem>
-            ))}
-          </RevealGroup>
         </div>
 
-        <Reveal className="lg:col-span-4 lg:col-start-9 lg:self-end" delay={0.2}>
-          <aside className="relative overflow-hidden rounded-[var(--radius-card)] bg-olive p-9 text-cream shadow-[0_40px_80px_-40px_rgb(0_0_0/0.6)] md:p-11">
-            <SymbolMark className="absolute -top-20 -right-20 size-64 opacity-20" stroke="var(--color-cream)" strokeWidth={4} />
-            <Icon name="seal" className="relative size-9 text-gold-light" />
-            <p className="font-display relative mt-10 text-[clamp(1.6rem,2.4vw,2.2rem)] leading-[1.15]">{tenders.card.text}</p>
-            <Button href="#contato" subject="licitacoes" variant="cream" icon="arrow" className="relative mt-10 w-full sm:w-auto" magnetic>
+        <RevealGroup as="ul" className="mt-10 grid gap-4 sm:grid-cols-2 md:mt-12 lg:grid-cols-4">
+          {tenders.deliverables.map((d, i) => (
+            <RevealItem as="li" key={d.text}>
+              <div className="gold-card group relative flex min-h-36 flex-col justify-between gap-6 sm:aspect-[5/4] overflow-hidden rounded-[var(--radius-card)] p-6 text-green-900 transition-[transform,box-shadow] duration-700 ease-[var(--ease-out)] hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-30px_rgb(0_0_0/0.6)] md:p-7">
+                <span aria-hidden="true" className="shine" />
+                <div className="flex items-start justify-between">
+                  <span className="flex size-12 items-center justify-center rounded-full bg-green-900 text-gold transition-transform duration-700 ease-[var(--ease-out)] group-hover:rotate-[-12deg] group-hover:scale-110">
+                    <Icon name={d.icon} className="size-[22px]" />
+                  </span>
+                  <span aria-hidden="true" className="font-display text-sm tracking-[0.2em] text-green-900/60">0{i + 1}</span>
+                </div>
+                <p className="font-display text-[1.3rem] leading-snug">{d.text}</p>
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+
+        <Reveal className="mt-6" delay={0.1}>
+          <aside className="relative flex flex-col gap-6 overflow-hidden rounded-[var(--radius-card)] bg-olive p-8 text-cream md:flex-row md:items-center md:justify-between md:p-10">
+            <SymbolMark className="absolute -top-24 -left-16 size-72 opacity-15" stroke="var(--color-cream)" strokeWidth={4} />
+            <div className="relative flex items-center gap-5">
+              <span className="hidden size-14 shrink-0 items-center justify-center rounded-full border border-gold-light/60 text-gold-light sm:flex">
+                <Icon name="seal" className="size-7" />
+              </span>
+              <p className="font-display text-[clamp(1.45rem,2.2vw,2rem)] leading-tight">{tenders.card.text}</p>
+            </div>
+            <Button href="#contato" subject="licitacoes" variant="cream" icon="arrow" className="relative shrink-0" magnetic>
               {tenders.card.cta}
             </Button>
           </aside>

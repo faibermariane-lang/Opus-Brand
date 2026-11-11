@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { SymbolMark } from "@/components/brand/SymbolMark";
-import { Filled, Pending, fillValue } from "@/components/ui/Pending";
-import { contact, fillHints, footer, nav } from "@/content/site";
+import { Filled } from "@/components/ui/Pending";
+import { contact, footer, nav } from "@/content/site";
 import { whatsappUrl } from "@/lib/whatsapp";
 
 export function Footer({ homePrefix = "" }: { homePrefix?: string }) {
-  const email = fillValue("email");
   return (
     <footer className="bg-deep grain arc-top overflow-hidden">
       <SymbolMark className="pointer-events-none absolute -right-[12%] -bottom-[35%] w-[70vw] max-w-[900px] opacity-[0.06]" strokeWidth={2.5} />
@@ -42,7 +41,6 @@ export function Footer({ homePrefix = "" }: { homePrefix?: string }) {
             <ul className="mt-6 space-y-3 text-cream/75">
               <li><a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-underline hover:text-cream">WhatsApp {contact.whatsappDisplay}</a></li>
               <li><a href={contact.instagramUrl} target="_blank" rel="noopener noreferrer" className="link-underline hover:text-cream">{contact.instagramHandle}</a></li>
-              <li>{email ? <a href={`mailto:${email}`} className="link-underline hover:text-cream">{email}</a> : <>{footer.contactEmailLabel} <Pending hint={fillHints.email} /></>}</li>
               <li>{footer.hqShort}</li>
             </ul>
           </div>

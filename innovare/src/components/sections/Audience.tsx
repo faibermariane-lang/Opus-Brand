@@ -3,25 +3,22 @@ import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { audience } from "@/content/site";
 
+/** Para quem: cinco perfis em cartões dourados compactos, com brilho e ícone que gira no hover. */
 export function Audience() {
   return (
     <section id="para-quem" aria-labelledby="para-quem-title" className="bg-linen arc-top">
-      <div className="container-x section-y">
-        <SectionHeading eyebrow={audience.eyebrow} title={audience.title} id="para-quem-title" titleClassName="max-w-[15ch]" />
-        <RevealGroup as="ul" className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-6 md:mt-20">
+      <div className="container-x pt-[clamp(48px,5.5vw,84px)] pb-[calc(var(--radius-arc)+40px)]">
+        <SectionHeading eyebrow={audience.eyebrow} title={audience.title} id="para-quem-title" titleClassName="lg:whitespace-nowrap" />
+        <RevealGroup as="ul" className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {audience.profiles.map((p, i) => (
-            <RevealItem as="li" key={p.strong} className={`${i < 3 ? "lg:col-span-2" : "lg:col-span-3"}`}>
-              <article className="group flex h-full flex-col justify-between gap-10 rounded-[var(--radius-card)] border border-green-900/10 bg-cream-soft p-7 transition-[transform,border-color,box-shadow] duration-700 ease-[var(--ease-out)] hover:-translate-y-1 hover:border-gold/70 hover:shadow-[var(--shadow-soft)] md:p-8">
-                <div className="flex items-center justify-between">
-                  <span className="flex size-11 items-center justify-center rounded-full border border-gold/50 text-olive transition-colors duration-700 group-hover:bg-gold group-hover:text-green-900">
-                    <Icon name={p.icon} className="size-5" />
-                  </span>
-                  <span className="font-sans text-xs tracking-[0.2em] text-olive/70 tabular-nums" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <p className="text-[1.02rem] leading-relaxed text-green-900/70">
-                  <strong className="font-display block text-[1.4rem] leading-tight font-normal text-green-900">{p.strong}</strong>
+            <RevealItem as="li" key={p.strong} className={i === 4 ? "sm:col-span-2 lg:col-span-1" : ""}>
+              <article className="gold-card group relative flex h-full flex-col gap-6 overflow-hidden rounded-[24px] p-6 text-green-900 transition-[transform,box-shadow] duration-700 ease-[var(--ease-out)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)]">
+                <span aria-hidden="true" className="shine" />
+                <span className="flex size-11 items-center justify-center rounded-full bg-green-900 text-gold transition-transform duration-[900ms] ease-[var(--ease-out)] group-hover:rotate-[360deg]">
+                  <Icon name={p.icon} className="size-5" />
+                </span>
+                <p className="text-[0.95rem] leading-relaxed text-green-900/75">
+                  <strong className="font-display mb-1 block text-[1.2rem] leading-tight font-normal text-green-900">{p.strong}</strong>
                   {p.text}
                 </p>
               </article>

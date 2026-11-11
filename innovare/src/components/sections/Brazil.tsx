@@ -7,15 +7,15 @@ import { brazil } from "@/content/site";
 export function Brazil() {
   return (
     <section id="brasil" aria-labelledby="brasil-title" className="bg-linen arc-top">
-      <div className="container-x section-y grid gap-16 lg:grid-cols-12 lg:items-center">
+      <div className="container-x section-y grid gap-12 lg:grid-cols-12 lg:items-start">
         <div className="lg:col-span-5">
           <SectionHeading eyebrow={brazil.eyebrow} title={brazil.title} id="brasil-title" titleClassName="max-w-[14ch]" />
           <Reveal delay={0.15}>
-            <p className="lead mt-8 text-green-900/75">{brazil.text}</p>
+            <p className="lead mt-6 text-green-900/75">{brazil.text}</p>
           </Reveal>
-          <RevealGroup as="ul" className="mt-12 space-y-0 border-t border-green-900/12">
+          <RevealGroup as="ul" className="mt-8 space-y-0 border-t border-green-900/12">
             {brazil.highlights.map((h) => (
-              <RevealItem as="li" key={h.title} className="flex items-start gap-5 border-b border-green-900/12 py-6">
+              <RevealItem as="li" key={h.title} className="flex items-start gap-5 border-b border-green-900/12 py-5">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-full border border-gold/60 text-olive">
                   <Icon name={h.icon} className="size-5" />
                 </span>

@@ -20,6 +20,7 @@ export function BrazilMap() {
   const [hover, setHover] = useState<string | null>(null);
   const [selected, setSelected] = useState<string>("");
   const [tip, setTip] = useState<{ x: number; y: number } | null>(null);
+  const [visited, setVisited] = useState<Set<string>>(() => new Set());
   const svgRef = useRef<SVGSVGElement>(null);
   const selectId = useId();
   const current = hover ?? (selected || null);
@@ -34,11 +35,12 @@ export function BrazilMap() {
     const el = svgRef.current.querySelector<SVGPathElement>(`[data-uf="${uf}"]`);
     if (!el) return;
     const b = el.getBBox();
-    setTip({ x: ((b.x + b.width / 2) / VB_W) * 100, y: (b.y / VB_H) * 100 });
+    setTip({ x: Math.min(68, Math.max(32, ((b.x + b.width / 2) / VB_W) * 100)), y: (b.y / VB_H) * 100 });
   };
 
   const enter = (uf: string) => {
     setHover(uf);
+    setVisited((v) => (v.has(uf) ? v : new Set(v).add(uf)));
     placeTip(uf);
   };
   const leave = () => {
@@ -47,6 +49,7 @@ export function BrazilMap() {
   };
   const choose = (uf: string) => {
     setSelected(uf);
+    if (uf) setVisited((v) => new Set(v).add(uf));
     setHover(null);
     placeTip(uf || null);
   };
@@ -62,6 +65,13 @@ export function BrazilMap() {
           role="img"
           onPointerLeave={leave}
         >
+          <defs>
+            <linearGradient id="rose-gold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#ecc3b8" />
+              <stop offset="0.5" stopColor="#c98f8a" />
+              <stop offset="1" stopColor="#a8616c" />
+            </linearGradient>
+          </defs>
           <g strokeLinejoin="round">
             {MAP.locations.map((l) => {
               const uf = l.id.toUpperCase();
@@ -74,11 +84,11 @@ export function BrazilMap() {
                   data-uf={uf}
                   onPointerEnter={(e) => e.pointerType === "mouse" && enter(uf)}
                   onClick={() => choose(uf)}
-                  className="cursor-pointer transition-[fill,stroke] duration-500 ease-[var(--ease-out)]"
+                  className="cursor-pointer transition-[fill,stroke] duration-700 ease-[var(--ease-out)]"
                   style={{
-                    fill: on ? "rgb(213 178 111 / 0.42)" : isHQ ? "rgb(213 178 111 / 0.16)" : "rgb(240 230 194 / 0.35)",
-                    stroke: on ? "var(--color-gold)" : "rgb(9 40 28 / 0.38)",
-                    strokeWidth: on ? 1.4 : 0.7,
+                    fill: on ? "url(#rose-gold)" : visited.has(uf) ? "rgb(201 143 138 / 0.38)" : isHQ ? "rgb(183 110 121 / 0.22)" : "rgb(240 230 194 / 0.35)",
+                    stroke: on ? "#8e4f59" : "rgb(9 40 28 / 0.38)",
+                    strokeWidth: on ? 1.2 : 0.7,
                   }}
                 />
               );
@@ -86,8 +96,8 @@ export function BrazilMap() {
           </g>
           {/* Sede em Chapecó */}
           <g pointerEvents="none" aria-hidden="true">
-            <circle cx={HQ.x} cy={HQ.y} r={6} fill="var(--color-gold)" className="pulse-ring" opacity={0.6} />
-            <circle cx={HQ.x} cy={HQ.y} r={4.2} fill="var(--color-green-900)" stroke="var(--color-gold)" strokeWidth={1.6} />
+            <circle cx={HQ.x} cy={HQ.y} r={6} fill="var(--color-rose)" className="pulse-ring" opacity={0.6} />
+            <circle cx={HQ.x} cy={HQ.y} r={4.2} fill="var(--color-green-900)" stroke="var(--color-rose)" strokeWidth={1.6} />
             <line x1={HQ.x} y1={HQ.y} x2={HQ.x + 70} y2={HQ.y + 40} stroke="var(--color-green-900)" strokeWidth={0.6} opacity={0.6} />
             <text x={HQ.x + 74} y={HQ.y + 44} fontSize={13} fill="var(--color-green-900)" fontFamily="var(--font-sans)" letterSpacing="0.06em">
               {brazil.hqMarker}
@@ -101,7 +111,7 @@ export function BrazilMap() {
             className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-[calc(100%+10px)] rounded-full bg-green-900 px-4 py-2 text-[0.8rem] whitespace-nowrap text-cream shadow-[var(--shadow-lift)] transition-[left,top] duration-500 ease-[var(--ease-out)]"
             style={{ left: `${tip.x}%`, top: `${tip.y}%` }}
           >
-            <span className="mr-2 inline-block size-1.5 rounded-full bg-gold align-middle" />
+            <span className="mr-2 inline-block size-1.5 rounded-full bg-rose-light align-middle" />
             {label}
           </div>
         ) : null}

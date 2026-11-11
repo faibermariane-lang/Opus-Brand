@@ -27,15 +27,16 @@ export function Services() {
   return (
     <section id="servicos" aria-labelledby="servicos-title" className="bg-cream-soft">
       <div className="container-x section-y">
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-          <SectionHeading eyebrow={services.eyebrow} title={services.title} id="servicos-title" className="lg:col-span-7" titleClassName="max-w-[16ch]" />
-          <Reveal delay={0.15} className="lg:col-span-4 lg:col-start-9">
-            <p className="lead text-green-900/75">{services.subtitle}</p>
-          </Reveal>
-        </div>
+        <SectionHeading
+          eyebrow={services.eyebrow}
+          title={services.title}
+          id="servicos-title"
+          subtitle={services.subtitle}
+          titleClassName="lg:whitespace-nowrap"
+        />
 
-        <Reveal className="mt-14 md:mt-20">
-          <ul className="flex flex-col gap-4 lg:h-[620px] lg:flex-row">
+        <Reveal className="mt-10 md:mt-12">
+          <ul className="flex flex-col gap-4 lg:h-[560px] lg:flex-row">
             {services.items.map((s, i) => {
               const open = (desktop && active === null ? 0 : active) === i;
               const panelId = `${base}-p${i}`;
@@ -120,7 +121,7 @@ export function Services() {
           </ul>
         </Reveal>
 
-        <Reveal className="mt-14 flex flex-col items-start gap-5 border-t border-green-900/10 pt-10 sm:flex-row sm:items-center sm:justify-between">
+        <Reveal className="mt-10 flex flex-col items-start gap-5 border-t border-green-900/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-display text-[clamp(1.3rem,2vw,1.7rem)] text-green-900/85">{services.footer.text}</p>
           <Button href={whatsappUrl()} external variant="outline-dark" icon="arrow" magnetic>
             {services.footer.cta}

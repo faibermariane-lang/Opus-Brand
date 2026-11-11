@@ -8,7 +8,7 @@ import { HeroParallax } from "@/components/interactive/HeroParallax";
 export function Hero() {
   const words = hero.title.split(" ");
   return (
-    <section id="inicio" aria-labelledby="hero-title" className="bg-deep grain intro-delay relative flex min-h-[100svh] flex-col overflow-hidden">
+    <section id="inicio" aria-labelledby="hero-title" className="bg-deep grain intro-delay relative flex min-h-[86svh] flex-col overflow-hidden">
       {/* Símbolo gigante ao fundo, girando uma volta a cada 120s */}
       <HeroParallax className="pointer-events-none absolute top-1/2 -right-[38%] w-[150vw] max-w-none -translate-y-1/2 sm:-right-[28%] sm:w-[110vw] lg:-right-[14%] lg:w-[min(78vw,1180px)]">
         <div className="spin-120 opacity-[0.11]">
@@ -17,11 +17,11 @@ export function Hero() {
       </HeroParallax>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(70% 60% at 15% 85%, rgb(15 58 42 / 0.9), transparent 70%)" }} />
 
-      <div className="container-x relative flex flex-1 flex-col justify-end pt-36 pb-28 md:pb-32 lg:pt-44">
-        <p className="eyebrow hero-fade mb-8 text-gold md:mb-10" style={{ "--d": "0.05s" } as React.CSSProperties}>
+      <div className="container-x relative flex flex-1 flex-col justify-center pt-32 pb-16 md:pt-36 lg:pt-36 lg:pb-20">
+        <p className="eyebrow hero-fade mb-6 text-gold md:mb-8" style={{ "--d": "0.05s" } as React.CSSProperties}>
           {hero.eyebrow}
         </p>
-        <h1 id="hero-title" className="h-display max-w-[15ch] text-cream" >
+        <h1 id="hero-title" className="h-display max-w-[17ch] text-cream" >
           <span className="sr-only">{hero.title}</span>
           {words.map((w, i) => (
             <span key={i} aria-hidden="true" className="inline-block overflow-hidden pb-[0.1em] -mb-[0.1em] align-bottom">
@@ -32,7 +32,7 @@ export function Hero() {
             </span>
           ))}
         </h1>
-        <div className="mt-10 grid gap-10 md:mt-12 lg:grid-cols-[minmax(0,34rem)_auto] lg:items-end lg:justify-between">
+        <div className="mt-8 grid gap-8 md:mt-10 lg:grid-cols-[minmax(0,34rem)_auto] lg:items-end lg:justify-between">
           <p className="lead hero-fade max-w-[34rem] text-cream/78" style={{ "--d": "0.55s" } as React.CSSProperties}>
             {hero.subtitle}
           </p>

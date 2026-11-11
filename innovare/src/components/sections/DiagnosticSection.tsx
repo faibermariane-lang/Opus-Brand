@@ -6,11 +6,11 @@ import { diagnostic } from "@/content/site";
 export function DiagnosticSection() {
   return (
     <section id="diagnostico" aria-labelledby="diagnostico-title" className="bg-deep grain arc-top">
-      <div className="container-x section-y grid gap-14 lg:grid-cols-12">
+      <div className="container-x section-y !pb-[clamp(64px,7vw,104px)] grid gap-10 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-5">
           <SectionHeading eyebrow={diagnostic.eyebrow} title={diagnostic.title} id="diagnostico-title" tone="light" titleClassName="max-w-[13ch] text-cream" />
           <Reveal delay={0.15}>
-            <p className="lead mt-8 max-w-md text-cream/70">{diagnostic.support}</p>
+            <p className="lead mt-6 max-w-md text-cream/70">{diagnostic.support}</p>
           </Reveal>
         </div>
         <Reveal className="lg:col-span-7" delay={0.1}>

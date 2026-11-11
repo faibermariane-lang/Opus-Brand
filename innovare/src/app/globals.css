@@ -14,6 +14,8 @@
   --color-cream: #f0e6c2;
   --color-cream-soft: #f7f1db;
   --color-wine: #844148;
+  --color-rose: #b76e79;
+  --color-rose-light: #d9a6a0;
   --color-ink: #0b0c0e;
 
   /* As famílias são definidas no layout (next/font) — troque lá pelas fontes licenciadas. */
@@ -22,7 +24,7 @@
 
   --radius-card: 28px;
   --radius-photo: 32px;
-  --radius-arc: clamp(40px, 9vw, 160px);
+  --radius-arc: clamp(32px, 6vw, 104px);
 
   --shadow-soft: 0 1px 2px rgb(9 40 28 / 0.04), 0 18px 40px -24px rgb(9 40 28 / 0.18);
   --shadow-lift: 0 2px 4px rgb(9 40 28 / 0.05), 0 30px 60px -30px rgb(9 40 28 / 0.28);
@@ -102,12 +104,12 @@
     text-transform: uppercase;
   }
   .h-display {
-    font-size: clamp(2.4rem, 6vw, 5.5rem);
+    font-size: clamp(2.2rem, 5vw, 4.6rem);
     line-height: 1.04;
     letter-spacing: -0.025em;
   }
   .h-section {
-    font-size: clamp(2rem, 4.4vw, 4rem);
+    font-size: clamp(1.9rem, 3.8vw, 3.4rem);
     line-height: 1.06;
     letter-spacing: -0.022em;
   }
@@ -126,8 +128,10 @@
     margin-inline: auto;
     padding-inline: clamp(20px, 5vw, 56px);
   }
+  /* Título sobe (topo menor); base reserva espaço para o arco da seção seguinte. */
   .section-y {
-    padding-block: clamp(88px, 12vw, 168px);
+    padding-top: clamp(56px, 6.5vw, 104px);
+    padding-bottom: calc(var(--radius-arc) + clamp(40px, 5vw, 72px));
   }
 
   /* Seção escura/clara com topo em arco que sobrepõe a anterior (junção sem corte duro). */
@@ -181,6 +185,26 @@
     background: linear-gradient(180deg, rgb(240 230 194 / 0.07), rgb(240 230 194 / 0.025));
     border: 1px solid rgb(240 230 194 / 0.14);
     backdrop-filter: blur(6px);
+  }
+
+  /* Superfície dourada metálica (cards em dourado) com brilho que varre no hover. */
+  .gold-card {
+    background:
+      radial-gradient(120% 90% at 20% 0%, rgb(255 255 255 / 0.32), transparent 55%),
+      linear-gradient(140deg, #e8cf95 0%, var(--color-gold) 48%, #b8924c 100%);
+    border: 1px solid rgb(255 255 255 / 0.35);
+  }
+  .gold-card .shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.45) 50%, transparent 65%);
+    transform: translateX(-110%);
+    transition: transform 1.2s var(--ease-out);
+    pointer-events: none;
+  }
+  .gold-card:hover .shine,
+  .gold-card:focus-within .shine {
+    transform: translateX(110%);
   }
 
   .gold-hairline {
@@ -251,6 +275,14 @@
     transform: scaleY(0);
     transform-origin: bottom;
   }
+}
+@keyframes coin-spin {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+.coin-cursor[data-hover] {
+  animation: coin-spin 1.6s linear infinite;
 }
 @keyframes pulse-ring {
   0% {

@@ -10,29 +10,29 @@ import { whatsappUrl } from "@/lib/whatsapp";
 export function Team() {
   return (
     <section id="equipe" aria-labelledby="equipe-title" className="bg-linen arc-top">
-      <div className="container-x section-y grid items-center gap-14 md:grid-cols-12">
-        <Reveal className="md:col-span-6 lg:col-span-5">
+      <div className="container-x section-y !pb-[clamp(64px,7vw,104px)] grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+        <Reveal className="lg:col-span-7">
           <figure className="space-y-4">
             <Photo
               src={team.photo.src}
               alt={team.photo.alt}
               width={team.photo.width}
               height={team.photo.height}
-              sizes="(min-width: 1024px) 480px, (min-width: 768px) 46vw, 92vw"
-              shape="arc"
-              objectPosition="50% 25%"
-              className="aspect-[4/5]"
+              sizes="(min-width: 1320px) 700px, (min-width: 1024px) 56vw, 92vw"
+              shape="rounded"
+              objectPosition="50% 30%"
+              className="aspect-[16/10] lg:aspect-[4/3] lg:rounded-tl-[180px]"
             />
             <FounderCaption />
           </figure>
         </Reveal>
-        <div className="md:col-span-6 lg:col-span-6 lg:col-start-7">
+        <div className="lg:col-span-5">
           <SectionHeading eyebrow={team.eyebrow} title={team.title} id="equipe-title" titleClassName="max-w-[14ch]" />
           <Reveal delay={0.15}>
-            <p className="font-display mt-8 max-w-xl text-[clamp(1.3rem,2vw,1.75rem)] leading-[1.35] text-green-900/80">{team.text}</p>
+            <p className="font-display mt-6 max-w-xl text-[clamp(1.3rem,2vw,1.75rem)] leading-[1.35] text-green-900/80">{team.text}</p>
           </Reveal>
           <Reveal delay={0.25}>
-            <Button href={whatsappUrl()} external variant="dark" icon="arrow" magnetic className="mt-10">
+            <Button href={whatsappUrl()} external variant="dark" icon="arrow" magnetic className="mt-8">
               {team.cta}
             </Button>
           </Reveal>

@@ -1,6 +1,6 @@
 import { SymbolDraw } from "@/components/brand/SymbolDraw";
 import { SymbolMark } from "@/components/brand/SymbolMark";
-import { GoldLine } from "@/components/ui/GoldLine";
+import { PurposeTrio } from "@/components/interactive/PurposeTrio";
 import { Icon } from "@/components/ui/Icon";
 import { Pending } from "@/components/ui/Pending";
 import { Photo } from "@/components/ui/Photo";
@@ -38,7 +38,7 @@ export function About() {
           </Reveal>
         </div>
 
-        <Reveal className="mt-16 md:mt-24">
+        <Reveal className="mt-10 md:mt-14">
           <figure className="space-y-4">
             <Photo
               src={about.photo.src}
@@ -55,7 +55,7 @@ export function About() {
         </Reveal>
 
         {/* Manifesto */}
-        <div className="mt-24 grid gap-12 md:mt-36 lg:grid-cols-12">
+        <div className="mt-16 grid gap-10 md:mt-24 lg:grid-cols-12">
           <div className="lg:col-span-1">
             <SymbolMark className="size-12 opacity-80" strokeWidth={10} />
           </div>
@@ -72,20 +72,9 @@ export function About() {
         </div>
 
         {/* Propósito, missão e promessa */}
-        <RevealGroup className="mt-24 grid md:mt-32 md:grid-cols-3">
-          {about.pillars.map((b, i) => (
-            <RevealItem key={b.title} className={`relative py-8 md:px-10 md:py-4 ${i === 0 ? "md:pl-0" : ""}`}>
-              {i > 0 ? (
-                <>
-                  <GoldLine className="absolute top-0 left-0 w-full md:hidden" />
-                  <GoldLine vertical className="absolute top-0 left-0 hidden h-full md:block" delay={i * 0.15} />
-                </>
-              ) : null}
-              <p className="font-display text-2xl italic text-olive">{b.title}</p>
-              <p className="mt-3 text-[1.05rem] leading-relaxed text-green-900/80">{b.text}</p>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+        <Reveal className="mt-16 md:mt-24">
+          <PurposeTrio items={about.pillars} />
+        </Reveal>
       </div>
 
       {/* O que não prometemos */}
@@ -98,17 +87,18 @@ export function About() {
       </div>
 
       {/* Valores */}
-      <div className="container-x section-y !pt-20 md:!pt-28">
+      <div className="container-x pt-14 pb-[calc(var(--radius-arc)+48px)] md:pt-20">
         <RevealGroup className="grid gap-5 md:grid-cols-3">
           {about.values.map((v) => (
             <RevealItem key={v.title}>
-              <article className="group relative h-full overflow-hidden rounded-[var(--radius-card)] border border-gold/30 bg-cream-soft p-8 shadow-[var(--shadow-soft)] transition-[transform,box-shadow,border-color] duration-700 ease-[var(--ease-out)] hover:-translate-y-1 hover:border-gold hover:shadow-[var(--shadow-lift)] md:p-10">
-                <SymbolMark className="absolute -right-16 -bottom-16 size-48 opacity-0 transition-opacity duration-1000 group-hover:opacity-[0.12]" strokeWidth={5} />
-                <span className="flex size-12 items-center justify-center rounded-full border border-gold/50 text-olive transition-colors duration-700 group-hover:bg-gold group-hover:text-green-900">
+              <article className="gold-card group relative h-full overflow-hidden rounded-[var(--radius-card)] p-8 text-green-900 shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-700 ease-[var(--ease-out)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-lift)] md:p-10">
+                <span aria-hidden="true" className="shine" />
+                <SymbolMark className="absolute -right-14 -bottom-14 size-48 opacity-20 transition-transform duration-[1400ms] ease-[var(--ease-out)] group-hover:rotate-45" stroke="var(--color-green-900)" strokeWidth={5} />
+                <span className="flex size-12 items-center justify-center rounded-full bg-green-900 text-gold transition-transform duration-700 group-hover:scale-110">
                   <Icon name={v.icon} className="size-[22px]" />
                 </span>
                 <h3 className="h-card mt-10">{v.title}</h3>
-                <p className="mt-3 leading-relaxed text-green-900/75">{v.text}</p>
+                <p className="mt-3 leading-relaxed text-green-900/80">{v.text}</p>
               </article>
             </RevealItem>
           ))}

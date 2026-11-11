@@ -24,18 +24,6 @@ export const fill = {
     { name: null as string | null, role: null as string | null },
   ],
 
-  /** Prazo padrão de resposta. Ex.: "no mesmo dia útil" (completa "Retornamos ___."). */
-  responseTime: null as string | null,
-
-  /** E-mail completo. Ex.: "contato@innovare.com.br". */
-  email: null as string | null,
-
-  /** Endereço da sede, se quiser exibir. Ex.: "Rua ..., nº ..., Centro". */
-  address: null as string | null,
-
-  /** Horário de atendimento. Ex.: "Segunda a sexta, das 8h às 18h". */
-  hours: null as string | null,
-
   /** CNPJ e registro no CRC (rodapé). */
   cnpj: null as string | null,
   crc: null as string | null,
@@ -57,10 +45,6 @@ export const showNumbers = false;
 /** Rótulos dos marcadores exibidos enquanto um campo não for preenchido. */
 export const fillHints: Record<string, string> = {
   founders: "nome e cargo de cada fundadora",
-  responseTime: "prazo",
-  email: "e-mail",
-  address: "endereço",
-  hours: "horário",
   cnpj: "CNPJ",
   crc: "CRC",
   yearsActive: "anos",
@@ -338,11 +322,10 @@ export const team = {
   eyebrow: "QUEM ESTÁ POR TRÁS",
   title: "Relações que se constroem com cuidado.",
   photo: {
-    /** Coloque o arquivo em /public/images/fundadoras-02.jpg e troque para "/images/fundadoras-02.jpg". */
-    src: null as string | null,
-    alt: "As duas fundadoras da Innovare no escritório",
-    width: 1600,
-    height: 2000,
+    src: "/images/fundadoras-02.jpg" as string | null,
+    alt: "As duas fundadoras da Innovare conversando à mesa do escritório",
+    width: 2000,
+    height: 1116,
   },
   text: "Por trás da Innovare há uma equipe que acompanha cada cliente de perto. Aqui, você fala com quem conhece o seu negócio e responde pelas decisões do escritório.",
   cta: "Conversar com a equipe",
@@ -376,8 +359,6 @@ export const faq = {
       q: "Com quem eu falo no dia a dia?",
       a: "Com uma equipe que conhece a sua empresa. Você tem um canal direto com a Innovare, sem robôs, sem protocolo e sem ter que repetir a sua história.",
     },
-    /** A resposta usa `fill.responseTime` (com a primeira letra maiúscula). */
-    { q: "Em quanto tempo vocês respondem?", a: "{responseTime^}." },
   ],
 };
 
@@ -432,7 +413,7 @@ export const finalCta = {
 
 export const contactSection = {
   title: "Fale com a Innovare",
-  text: "Conte um pouco sobre a sua empresa. Retornamos {responseTime}.",
+  text: "Conte um pouco sobre a sua empresa.",
   form: {
     name: "Nome",
     company: "Empresa",
@@ -451,10 +432,8 @@ export const contactSection = {
   },
   details: {
     whatsapp: "WhatsApp",
-    email: "E-mail",
     instagram: "Instagram",
     hq: "Sede",
-    hours: "Horário",
   },
   footerLine: "Atendimento 100% online · Todo o Brasil",
 };
@@ -469,7 +448,6 @@ export const footer = {
     "Contabilidade empresarial",
     "Assessoria em licitações",
   ],
-  contactEmailLabel: "E-mail",
   hqShort: "Chapecó-SC",
   rights: "© {year} Innovare Contabilidade. Todos os direitos reservados.",
   legal: "CNPJ {cnpj} · CRC {crc}",
