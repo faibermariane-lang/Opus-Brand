@@ -1,0 +1,361 @@
+@import "tailwindcss";
+
+/* ───────────────────────── Tokens de design ─────────────────────────
+   Tailwind v4: os tokens vivem aqui (@theme) em vez de tailwind.config.
+   Cada token vira utilitário (bg-green-900, text-gold, rounded-card…) e
+   variável CSS (--color-green-900…). */
+@theme {
+  --color-green-900: #09281c;
+  --color-green-800: #0c3123;
+  --color-green-700: #0f3a2a;
+  --color-olive: #677351;
+  --color-gold: #d5b26f;
+  --color-gold-light: #e4c98f;
+  --color-cream: #f0e6c2;
+  --color-cream-soft: #f7f1db;
+  --color-wine: #844148;
+  --color-ink: #0b0c0e;
+
+  /* As famílias são definidas no layout (next/font) — troque lá pelas fontes licenciadas. */
+  --font-display: var(--font-display-family), "Times New Roman", serif;
+  --font-sans: var(--font-sans-family), "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --radius-card: 28px;
+  --radius-photo: 32px;
+  --radius-arc: clamp(40px, 9vw, 160px);
+
+  --shadow-soft: 0 1px 2px rgb(9 40 28 / 0.04), 0 18px 40px -24px rgb(9 40 28 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(9 40 28 / 0.05), 0 30px 60px -30px rgb(9 40 28 / 0.28);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --text-eyebrow: 0.72rem;
+  --tracking-eyebrow: 0.28em;
+}
+
+:root {
+  --dur-short: 0.5s;
+  --dur-base: 0.9s;
+  --dur-long: 1.2s;
+  --header-h: 76px;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 96px;
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  body {
+    background: var(--color-cream);
+    color: var(--color-green-900);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-green-900);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--text-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+  .h-display {
+    font-size: clamp(2.4rem, 6vw, 5.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+  .h-section {
+    font-size: clamp(2rem, 4.4vw, 4rem);
+    line-height: 1.06;
+    letter-spacing: -0.022em;
+  }
+  .h-card {
+    font-size: clamp(1.45rem, 2.1vw, 1.9rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+  .lead {
+    font-size: clamp(1.02rem, 1.25vw, 1.18rem);
+    line-height: 1.65;
+  }
+  .container-x {
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 56px);
+  }
+  .section-y {
+    padding-block: clamp(88px, 12vw, 168px);
+  }
+
+  /* Seção escura/clara com topo em arco que sobrepõe a anterior (junção sem corte duro). */
+  .arc-top {
+    position: relative;
+    border-top-left-radius: var(--radius-arc);
+    border-top-right-radius: var(--radius-arc);
+    margin-top: calc(var(--radius-arc) * -1);
+    z-index: 1;
+  }
+
+  /* Grão sutil de papel premium sobre áreas escuras. */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--grain);
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+  }
+  .grain > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Fundo verde profundo */
+  .bg-deep {
+    background:
+      radial-gradient(120% 80% at 80% 0%, rgb(255 255 255 / 0.035), transparent 60%),
+      radial-gradient(90% 70% at 0% 100%, rgb(0 0 0 / 0.28), transparent 60%),
+      var(--color-green-900);
+    color: var(--color-cream);
+  }
+
+  /* Textura de linho em creme */
+  .bg-linen {
+    background-color: var(--color-cream);
+    background-image:
+      repeating-linear-gradient(0deg, rgb(9 40 28 / 0.018) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgb(9 40 28 / 0.014) 0 1px, transparent 1px 4px);
+  }
+
+  .glass {
+    background: linear-gradient(180deg, rgb(240 230 194 / 0.07), rgb(240 230 194 / 0.025));
+    border: 1px solid rgb(240 230 194 / 0.14);
+    backdrop-filter: blur(6px);
+  }
+
+  .gold-hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.7s var(--ease-out);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .sr-only-focusable:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* ───────── Hero: revelação inicial em CSS (sem esperar JS → melhor LCP) ───────── */
+@keyframes rise-in {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.intro-delay {
+  --intro: 1.05s;
+}
+html.no-intro .intro-delay {
+  --intro: 0s;
+}
+.hero-word {
+  display: inline-block;
+  animation: rise-in 1.2s var(--ease-out) both;
+  animation-delay: calc(var(--intro, 0s) + var(--i, 0) * 55ms + 0.15s);
+}
+.hero-fade {
+  animation: fade-up 1.1s var(--ease-out) both;
+  animation-delay: calc(var(--intro, 0s) + var(--d, 0s));
+}
+.spin-120 {
+  animation: spin-slow 120s linear infinite;
+}
+.scroll-line {
+  animation: scroll-line 2.6s var(--ease-out) infinite;
+}
+.pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse-ring 2.8s var(--ease-out) infinite;
+}
+
+/* ───────── Preloader (só na primeira visita; CSS puro) ───────── */
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.preloader {
+  animation: fade-out 0.45s var(--ease-out) 0.85s forwards;
+}
+.preloader .draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 0.8s var(--ease-out) forwards;
+}
+.preloader .appear {
+  opacity: 0;
+  animation: fade-in 0.4s var(--ease-out) 0.45s forwards;
+}
+html.no-intro .preloader {
+  display: none;
+}
+
+/* ───────── Movimento reduzido ───────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.2s !important;
+    scroll-behavior: auto !important;
+  }
+  .hero-word,
+  .hero-fade {
+    animation: none !important;
+  }
+  .preloader,
+  .scroll-line {
+    display: none !important;
+  }
+  .spin-120,
+  .pulse-ring {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
