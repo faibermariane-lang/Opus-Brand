@@ -1,4 +1,4 @@
-import { contact, fill, meta, services } from "@/content/site";
+import { company, contact, founders, meta, services } from "@/content/site";
 import { siteUrl } from "@/lib/site-url";
 
 /** JSON-LD AccountingService. */
@@ -22,7 +22,9 @@ export function JsonLd() {
       addressCountry: "BR",
     },
     sameAs: [contact.instagramUrl],
-    ...(fill.cnpj ? { taxID: fill.cnpj } : {}),
+    email: contact.email,
+    identifier: { "@type": "PropertyValue", propertyID: "CRC", value: company.crc },
+    founder: founders.map((f) => ({ "@type": "Person", name: f.name, jobTitle: f.role })),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: services.eyebrow,

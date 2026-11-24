@@ -2,26 +2,24 @@ import { SymbolDraw } from "@/components/brand/SymbolDraw";
 import { SymbolMark } from "@/components/brand/SymbolMark";
 import { PurposeTrio } from "@/components/interactive/PurposeTrio";
 import { Icon } from "@/components/ui/Icon";
-import { Pending } from "@/components/ui/Pending";
 import { Photo } from "@/components/ui/Photo";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { RevealText } from "@/components/ui/RevealText";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { about, fill, fillHints } from "@/content/site";
+import { about, founders } from "@/content/site";
 
 export function FounderCaption({ tone = "dark" }: { tone?: "dark" | "light" }) {
-  const filled = fill.founders.every((f) => f.name && f.role);
   return (
-    <figcaption className={`flex flex-wrap gap-x-8 gap-y-2 text-sm ${tone === "light" ? "text-cream/70" : "text-green-900/60"}`}>
-      {filled
-        ? fill.founders.map((f) => (
-            <span key={f.name}>
-              <span className="font-display text-base font-semibold text-current">{f.name}</span>
-              <span className="mx-2 opacity-50">·</span>
-              {f.role}
-            </span>
-          ))
-        : <Pending hint={fillHints.founders} />}
+    <figcaption className={`flex flex-wrap gap-x-8 gap-y-2 text-sm ${tone === "light" ? "text-cream/70" : "text-green-900/65"}`}>
+      {founders.map((f) => (
+        <span key={f.name}>
+          <span className="font-display text-base font-semibold text-current">{f.name}</span>
+          <span className="mx-2 opacity-50">·</span>
+          {f.role}
+          <span className="mx-2 opacity-50">·</span>
+          {f.registry}
+        </span>
+      ))}
     </figcaption>
   );
 }

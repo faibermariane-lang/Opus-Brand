@@ -1,5 +1,4 @@
 import { Accordion } from "@/components/ui/Accordion";
-import { Filled } from "@/components/ui/Pending";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { faq } from "@/content/site";
@@ -12,7 +11,7 @@ export function Faq() {
           <SectionHeading title={faq.title} id="perguntas-title" titleClassName="max-w-[10ch]" />
         </div>
         <Reveal className="lg:col-span-8">
-          <Accordion items={faq.items.map((it) => ({ q: it.q, a: <Filled text={it.a} /> }))} />
+          <Accordion items={faq.items.map((it) => ({ q: it.q, a: it.a }))} />
         </Reveal>
       </div>
     </section>

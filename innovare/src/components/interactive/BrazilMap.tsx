@@ -1,14 +1,8 @@
 "use client";
-import brazilMap from "@svg-maps/brazil";
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { brazil, diagnostic, ufs } from "@/content/site";
 
-type Loc = { id: string; name: string; path: string };
-const MAP = brazilMap as unknown as { viewBox: string; locations: Loc[] };
-const [, , VB_W, VB_H] = MAP.viewBox.split(" ").map(Number);
-/** Chapecó-SC, posicionada sobre o desenho de SC (coordenadas do viewBox). */
-const HQ = { x: 334, y: 520 };
 const NAME: Record<string, string> = Object.fromEntries(ufs.map(([uf, name]) => [uf, name]));
 
 /**
@@ -16,7 +10,8 @@ const NAME: Record<string, string> = Object.fromEntries(ufs.map(([uf, name]) => 
  * e mostra tooltip; SC tem marcador pulsante. Alternativa acessível: select de UF.
  * Mapa: @svg-maps/brazil (CC BY 4.0).
  */
-export function BrazilMap() {
+export function BrazilMap({ shapes, viewBox }: { shapes: React.ReactNode; viewBox: string }) {
+  const [, , VB_W, VB_H] = viewBox.split(" ").map(Number);
   const [hover, setHover] = useState<string | null>(null);
   const [selected, setSelected] = useState<string>("");
   const [tip, setTip] = useState<{ x: number; y: number } | null>(null);
@@ -29,6 +24,17 @@ export function BrazilMap() {
     if (!current) return "";
     return current === "SC" ? brazil.tooltipHQ : brazil.tooltip.replace("{uf}", NAME[current] ?? current);
   }, [current]);
+
+  // Estados vêm prontos do servidor (BrazilMapShapes); aqui só alternamos classes.
+  useEffect(() => {
+    svgRef.current?.querySelectorAll<SVGPathElement>("[data-uf]").forEach((el) => {
+      const uf = el.dataset.uf ?? "";
+      el.classList.toggle("is-on", uf === current);
+      el.classList.toggle("is-visited", visited.has(uf));
+    });
+  }, [current, visited]);
+
+  const ufFrom = (t: EventTarget) => (t as Element).closest?.<SVGElement>("[data-uf]")?.dataset.uf ?? null;
 
   const placeTip = (uf: string | null) => {
     if (!uf || !svgRef.current) return setTip(null);
@@ -59,11 +65,19 @@ export function BrazilMap() {
       <div className="relative mx-auto w-full max-w-[600px]">
         <svg
           ref={svgRef}
-          viewBox={MAP.viewBox}
+          viewBox={viewBox}
           className="h-auto w-full overflow-visible"
           aria-label={brazil.a11y.mapLabel}
           role="img"
           onPointerLeave={leave}
+          onPointerOver={(e) => {
+            const uf = ufFrom(e.target);
+            if (e.pointerType === "mouse" && uf && uf !== hover) enter(uf);
+          }}
+          onClick={(e) => {
+            const uf = ufFrom(e.target);
+            if (uf) choose(uf);
+          }}
         >
           <defs>
             <linearGradient id="rose-gold" x1="0" y1="0" x2="1" y2="1">
@@ -72,37 +86,7 @@ export function BrazilMap() {
               <stop offset="1" stopColor="#a8616c" />
             </linearGradient>
           </defs>
-          <g strokeLinejoin="round">
-            {MAP.locations.map((l) => {
-              const uf = l.id.toUpperCase();
-              const on = current === uf;
-              const isHQ = uf === "SC";
-              return (
-                <path
-                  key={l.id}
-                  d={l.path}
-                  data-uf={uf}
-                  onPointerEnter={(e) => e.pointerType === "mouse" && enter(uf)}
-                  onClick={() => choose(uf)}
-                  className="cursor-pointer transition-[fill,stroke] duration-700 ease-[var(--ease-out)]"
-                  style={{
-                    fill: on ? "url(#rose-gold)" : visited.has(uf) ? "rgb(201 143 138 / 0.38)" : isHQ ? "rgb(183 110 121 / 0.22)" : "rgb(240 230 194 / 0.35)",
-                    stroke: on ? "#8e4f59" : "rgb(9 40 28 / 0.38)",
-                    strokeWidth: on ? 1.2 : 0.7,
-                  }}
-                />
-              );
-            })}
-          </g>
-          {/* Sede em Chapecó */}
-          <g pointerEvents="none" aria-hidden="true">
-            <circle cx={HQ.x} cy={HQ.y} r={6} fill="var(--color-rose)" className="pulse-ring" opacity={0.6} />
-            <circle cx={HQ.x} cy={HQ.y} r={4.2} fill="var(--color-green-900)" stroke="var(--color-rose)" strokeWidth={1.6} />
-            <line x1={HQ.x} y1={HQ.y} x2={HQ.x + 70} y2={HQ.y + 40} stroke="var(--color-green-900)" strokeWidth={0.6} opacity={0.6} />
-            <text x={HQ.x + 74} y={HQ.y + 44} fontSize={13} fill="var(--color-green-900)" fontFamily="var(--font-sans)" letterSpacing="0.06em">
-              {brazil.hqMarker}
-            </text>
-          </g>
+          {shapes}
         </svg>
 
         {tip && label ? (

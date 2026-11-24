@@ -1,4 +1,4 @@
-import { ContactForm } from "@/components/interactive/ContactForm";
+import { LazyContactForm } from "@/components/interactive/Lazy";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -9,6 +9,7 @@ export function Contact() {
   const d = contactSection.details;
   const rows = [
     { icon: "whatsapp", label: d.whatsapp, value: <a className="link-underline" href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{contact.whatsappDisplay}</a> },
+    { icon: "mail", label: d.email, value: <a className="link-underline break-all" href={`mailto:${contact.email}`}>{contact.email}</a> },
     { icon: "instagram", label: d.instagram, value: <a className="link-underline" href={contact.instagramUrl} target="_blank" rel="noopener noreferrer">{contact.instagramHandle}</a> },
     { icon: "pin", label: d.hq, value: <>{contact.city}, {contact.state}</> },
   ];
@@ -16,7 +17,7 @@ export function Contact() {
   return (
     <section id="contato" aria-labelledby="contato-title" className="bg-linen arc-top">
       <div className="container-x section-y grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <div className="lg:col-span-5">
+        <div className="min-w-0 lg:col-span-5">
           <SectionHeading title={contactSection.title} id="contato-title" titleClassName="max-w-[12ch]" />
           <Reveal delay={0.15}>
             <p className="lead mt-6 text-green-900/75">{contactSection.text}</p>
@@ -34,8 +35,8 @@ export function Contact() {
             <p className="eyebrow mt-8 text-olive">{contactSection.footerLine}</p>
           </Reveal>
         </div>
-        <Reveal className="lg:col-span-7" delay={0.1}>
-          <ContactForm />
+        <Reveal className="min-w-0 lg:col-span-7" delay={0.1}>
+          <LazyContactForm />
         </Reveal>
       </div>
     </section>

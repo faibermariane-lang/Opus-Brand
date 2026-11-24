@@ -1,13 +1,42 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { contactSection, subjects, type SubjectId } from "@/content/site";
-import { contactSchema, type ContactInput } from "@/lib/contact-schema";
-import { EVENTS } from "@/lib/events";
+
+/**
+ * Validação no navegador com as regras nativas do react-hook-form (sem zod no bundle do
+ * celular). A validação completa e definitiva acontece no servidor (src/lib/contact-schema.ts).
+ */
+type ContactInput = {
+  name: string;
+  company: string;
+  email: string;
+  whatsapp: string;
+  subject: SubjectId;
+  message: string;
+  consent: boolean;
+  website: string;
+};
+
+const singleLine = (v: string) => !/[\u0000-\u001f\u007f]/.test(v);
+const RULES = {
+  name: { required: true, minLength: 2, maxLength: 120, validate: singleLine },
+  company: { maxLength: 160, validate: (v: string) => !v || singleLine(v) },
+  email: { required: true, maxLength: 200, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/ },
+  whatsapp: {
+    required: true,
+    maxLength: 30,
+    pattern: /^[0-9+()\-.\s]+$/,
+    validate: (v: string) => v.replace(/\D/g, "").length >= 10,
+  },
+  subject: { required: true },
+  message: { required: true, minLength: 5, maxLength: 4000 },
+  consent: { validate: (v: boolean) => v === true },
+} as const;
+import { EVENTS, lastChoice } from "@/lib/events";
 import { EASE } from "@/lib/motion";
 import { whatsappUrl } from "@/lib/whatsapp";
 
@@ -20,6 +49,9 @@ const floatLabel =
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [fallback, setFallback] = useState("");
+  // Momento em que o formulário foi aberto (anti-robô no servidor).
+  const [startedAt] = useState(() => Date.now());
   const {
     register,
     handleSubmit,
@@ -27,8 +59,7 @@ export function ContactForm() {
     reset,
     formState: { errors },
   } = useForm<ContactInput>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: { name: "", company: "", email: "", whatsapp: "", subject: "gestao", message: "", website: "" },
+    defaultValues: { name: "", company: "", email: "", whatsapp: "", subject: lastChoice.subject ?? "gestao", message: "", consent: false, website: "" },
     mode: "onTouched",
   });
 
@@ -44,12 +75,14 @@ export function ContactForm() {
       const res = await fetch("/api/contato", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, startedAt }),
       });
       if (!res.ok) throw new Error(String(res.status));
       setStatus("success");
       reset();
     } catch {
+      const subject = subjects.find((s) => s.id === data.subject)?.label ?? "";
+      setFallback(`Olá, Innovare! Sou ${data.name}${data.company ? ` (${data.company})` : ""}. Assunto: ${subject}. ${data.message}`);
       setStatus("error");
     }
   };
@@ -104,27 +137,27 @@ export function ContactForm() {
             </div>
 
             <div className="relative">
-              <input id="c-name" autoComplete="name" placeholder={f.name} className={`${field} ${border("name")}`} {...register("name")} {...a11y("name")} />
+              <input id="c-name" autoComplete="name" placeholder={f.name} className={`${field} ${border("name")}`} {...register("name", RULES.name)} {...a11y("name")} />
               <label htmlFor="c-name" className={floatLabel}>{f.name}</label>
               {err("name")}
             </div>
             <div className="relative">
-              <input id="c-company" autoComplete="organization" placeholder={f.company} className={`${field} ${border("company")}`} {...register("company")} {...a11y("company")} />
+              <input id="c-company" autoComplete="organization" placeholder={f.company} className={`${field} ${border("company")}`} {...register("company", RULES.company)} {...a11y("company")} />
               <label htmlFor="c-company" className={floatLabel}>{f.company}</label>
               {err("company")}
             </div>
             <div className="relative">
-              <input id="c-email" type="email" autoComplete="email" inputMode="email" placeholder={f.email} className={`${field} ${border("email")}`} {...register("email")} {...a11y("email")} />
+              <input id="c-email" type="email" autoComplete="email" inputMode="email" placeholder={f.email} className={`${field} ${border("email")}`} {...register("email", RULES.email)} {...a11y("email")} />
               <label htmlFor="c-email" className={floatLabel}>{f.email}</label>
               {err("email")}
             </div>
             <div className="relative">
-              <input id="c-whatsapp" type="tel" autoComplete="tel" inputMode="tel" placeholder={f.whatsapp} className={`${field} ${border("whatsapp")}`} {...register("whatsapp")} {...a11y("whatsapp")} />
+              <input id="c-whatsapp" type="tel" autoComplete="tel" inputMode="tel" placeholder={f.whatsapp} className={`${field} ${border("whatsapp")}`} {...register("whatsapp", RULES.whatsapp)} {...a11y("whatsapp")} />
               <label htmlFor="c-whatsapp" className={floatLabel}>{f.whatsapp}</label>
               {err("whatsapp")}
             </div>
             <div className="relative sm:col-span-2">
-              <select id="c-subject" className={`${field} appearance-none pr-12 ${border("subject")}`} {...register("subject")} {...a11y("subject")}>
+              <select id="c-subject" className={`${field} appearance-none pr-12 ${border("subject")}`} {...register("subject", RULES.subject)} {...a11y("subject")}>
                 {subjects.map((s) => (
                   <option key={s.id} value={s.id}>{s.label}</option>
                 ))}
@@ -134,14 +167,14 @@ export function ContactForm() {
               {err("subject")}
             </div>
             <div className="relative sm:col-span-2">
-              <textarea id="c-message" rows={5} placeholder={f.message} className={`${field} resize-y ${border("message")}`} {...register("message")} {...a11y("message")} />
+              <textarea id="c-message" rows={5} placeholder={f.message} className={`${field} resize-y ${border("message")}`} {...register("message", RULES.message)} {...a11y("message")} />
               <label htmlFor="c-message" className={floatLabel}>{f.message}</label>
               {err("message")}
             </div>
 
             <div className="sm:col-span-2">
               <label className="flex cursor-pointer items-start gap-3 text-[0.95rem] text-green-900/75">
-                <input type="checkbox" className="peer sr-only" {...register("consent")} {...a11y("consent")} />
+                <input type="checkbox" className="peer sr-only" {...register("consent", RULES.consent)} {...a11y("consent")} />
                 <span
                   aria-hidden="true"
                   className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors peer-checked:border-gold peer-checked:bg-gold peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100 ${errors.consent ? "border-wine/60" : "border-green-900/30"}`}
@@ -167,9 +200,9 @@ export function ContactForm() {
               </Button>
               {status === "error" ? (
                 <p role="alert" className="max-w-sm text-sm text-wine">
-                  {contactSection.states.generalError}{" "}
-                  <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
-                    WhatsApp
+                  {contactSection.states.generalError}<br />
+                  <a href={whatsappUrl(fallback || undefined)} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block font-medium underline underline-offset-4">
+                    {contactSection.states.whatsappFallback}
                   </a>
                 </p>
               ) : null}

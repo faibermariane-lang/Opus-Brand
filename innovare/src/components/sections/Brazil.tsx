@@ -1,4 +1,5 @@
 import { BrazilMap } from "@/components/interactive/BrazilMap";
+import { BRAZIL_VIEWBOX, BrazilMapShapes } from "@/components/sections/BrazilMapShapes";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -28,7 +29,7 @@ export function Brazil() {
           </RevealGroup>
         </div>
         <Reveal className="lg:col-span-7" delay={0.1}>
-          <BrazilMap />
+          <BrazilMap viewBox={BRAZIL_VIEWBOX} shapes={<BrazilMapShapes />} />
         </Reveal>
       </div>
     </section>

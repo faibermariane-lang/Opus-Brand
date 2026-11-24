@@ -1,4 +1,4 @@
-import { Diagnostic } from "@/components/interactive/Diagnostic";
+import { LazyDiagnostic } from "@/components/interactive/Lazy";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { diagnostic } from "@/content/site";
@@ -14,7 +14,7 @@ export function DiagnosticSection() {
           </Reveal>
         </div>
         <Reveal className="lg:col-span-7" delay={0.1}>
-          <Diagnostic />
+          <LazyDiagnostic />
         </Reveal>
       </div>
     </section>

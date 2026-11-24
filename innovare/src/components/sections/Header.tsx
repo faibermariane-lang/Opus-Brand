@@ -83,14 +83,14 @@ export function Header() {
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 md:px-5 md:pt-5">
         <div
           className={`pointer-events-auto flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-gold/35 bg-cream-soft/80 pr-2 pl-5 backdrop-blur-xl transition-[padding,box-shadow,max-width,background-color] duration-700 ease-[var(--ease-out)] md:pl-7 ${
-            scrolled ? "py-1.5 shadow-[0_14px_40px_-22px_rgb(9_40_28/0.45)] lg:max-w-[1120px]" : "py-2.5"
+            scrolled ? "py-1.5 shadow-[0_14px_40px_-22px_rgb(9_40_28/0.45)] xl:max-w-[1180px]" : "py-2.5"
           }`}
         >
-          <a href="#inicio" aria-label={header.a11y.home} className="shrink-0" data-cursor="">
+          <a href="#inicio" aria-label={header.a11y.home} className="shrink-0 py-2" data-cursor="">
             <Logo variant="wordmark" className={`w-auto transition-[height] duration-700 ease-[var(--ease-out)] ${scrolled ? "h-[22px]" : "h-[26px]"}`} />
           </a>
 
-          <nav aria-label="Principal" className="hidden lg:block">
+          <nav aria-label="Principal" className="hidden xl:block">
             <ul className="flex items-center gap-1">
               {nav.map((item) => {
                 const isActive = active === item.href;
@@ -120,14 +120,14 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <span className="hidden sm:block">
-              <Button href={whatsappUrl()} external variant="gold" magnetic className="!min-h-11 !px-5 !py-2.5 !text-[0.86rem]">
+              <Button href={whatsappUrl()} external variant="gold" magnetic className="!min-h-11 !px-5 !py-2.5 !text-[0.86rem] whitespace-nowrap">
                 {header.cta}
               </Button>
             </span>
             <button
               ref={menuBtn}
               type="button"
-              className="flex min-h-11 items-center gap-2 rounded-full border border-green-900/15 px-4 text-sm font-medium text-green-900 lg:hidden"
+              className="flex min-h-11 items-center gap-2 rounded-full border border-green-900/15 px-4 text-sm font-medium text-green-900 xl:hidden"
               aria-expanded={open}
               aria-controls="menu-mobile"
               aria-label={open ? header.a11y.closeMenu : header.a11y.openMenu}
@@ -148,7 +148,7 @@ export function Header() {
             role="dialog"
             aria-modal="true"
             aria-label={header.mobileMenuTitle}
-            className="bg-deep grain fixed inset-0 z-[60] flex flex-col overflow-y-auto lg:hidden"
+            className="bg-deep grain fixed inset-0 z-[60] flex flex-col overflow-y-auto xl:hidden"
             initial={{ opacity: 0, clipPath: reduce ? "circle(150% at 100% 0%)" : "circle(0% at 92% 4%)" }}
             animate={{ opacity: 1, clipPath: "circle(150% at 92% 4%)" }}
             exit={{ opacity: 0, clipPath: reduce ? "circle(150% at 100% 0%)" : "circle(0% at 92% 4%)" }}

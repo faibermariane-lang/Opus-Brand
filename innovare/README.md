@@ -17,28 +17,20 @@ npm start        # serve o build
 
 ---
 
-## 1. Onde preencher os dados (para o cliente)
+## 1. Publicar (Vercel) — passo a passo
 
-**Tudo fica em `src/content/site.ts`.** No topo do arquivo, o objeto `fill` reúne todos os itens `[PREENCHER]` do textual. Enquanto um campo estiver `null`, o site mostra um marcador discreto *"a preencher: …"*. Nada foi inventado.
+1. Na Vercel, importe o repositório e defina **Root Directory = `innovare`** (Framework: Next.js).
+2. Em **Settings → Environment Variables**, cadastre:
+   | Variável | Obrigatória | O que é |
+   | --- | --- | --- |
+   | `RESEND_API_KEY` | **Sim** | Chave do [Resend](https://resend.com), serviço que entrega as mensagens do formulário por e-mail. Sem ela o formulário mostra erro e oferece o WhatsApp. |
+   | `NEXT_PUBLIC_SITE_URL` | Recomendada | Domínio final, ex.: `https://www.innovarecontabilidade.com.br` (sem barra no fim). Sem ela, a Vercel usa o domínio de produção do projeto. |
+   | `CONTACT_TO` | Não | Destinatário das mensagens. Padrão: `innovarecontabilidadee@gmail.com`. |
+   | `CONTACT_FROM` | Não | Remetente de um domínio verificado no Resend, ex.: `Site Innovare <site@seudominio.com.br>`. |
+3. **Resend em 2 minutos:** crie a conta com o e-mail `innovarecontabilidadee@gmail.com` e gere uma API key. Sem domínio próprio, o remetente padrão (`onboarding@resend.dev`) já entrega para o e-mail da própria conta. Com domínio próprio, verifique o domínio no Resend e preencha `CONTACT_FROM`.
+4. Faça o deploy e envie uma mensagem de teste pelo formulário.
 
-| Campo | Onde aparece |
-| --- | --- |
-| `siteUrl` (ou a env `NEXT_PUBLIC_SITE_URL`) | Open Graph, sitemap, robots, JSON-LD |
-| `founders[].name` / `founders[].role` | Legendas das fotos (Sobre e "Quem está por trás") |
-| `responseTime` (ex.: `"no mesmo dia útil"`) | Contato ("Retornamos …") e FAQ 8 |
-| `email` | Contato e rodapé |
-| `address`, `hours` | Contato (e JSON-LD, no caso do endereço) |
-| `cnpj`, `crc` | Rodapé (e JSON-LD, no caso do CNPJ) |
-| `yearsActive`, `companiesServed`, `statesWithClients` | Faixa de números. **Só com dados reais.** Depois de preencher, mude `showNumbers` para `true` |
-| `privacyPolicy`, `termsOfUse` | Páginas legais (parágrafos separados por linha em branco) |
-
-Outros pontos do mesmo arquivo:
-
-- **`contact.whatsappNumber`**: o número veio como `+55 49 9957-4160`, com só 8 dígitos depois do DDD. Confirme o número antes de publicar.
-- **Foto `fundadoras-02`**: não foi entregue. Coloque o arquivo em `public/images/fundadoras-02.jpg` e troque `team.photo.src` para `"/images/fundadoras-02.jpg"` (ajuste `width`/`height`). Sem o arquivo, a seção mostra um fallback com o símbolo.
-- **`diagnostic.questions[0].options[].service`**: o serviço citado na tela final do diagnóstico ("[serviço escolhido]").
-
-Toda a copy está em `site.ts`. Nenhum texto fica fixo nos componentes.
+Conteúdo, dados da equipe e registros (CRC/CRA), e-mail e textos legais ficam em **`src/content/site.ts`**.
 
 ## 2. Trocar as fontes
 
@@ -49,9 +41,9 @@ As fontes usadas são equivalentes livres (OFL), auto-hospedadas em `src/fonts/`
 
 Os componentes só usam `--font-display` e `--font-sans`, então não é preciso mexer em mais nada.
 
-## 3. Formulário de contato (integrar o e-mail)
+## 3. Formulário de contato
 
-`src/app/api/contato/route.ts` já valida os dados (mesmo esquema zod do cliente, em `src/lib/contact-schema.ts`), descarta spam pelo honeypot e registra em log. O `TODO(integração)` no arquivo mostra onde ligar Resend, Formspree, SMTP ou CRM. As chaves vão em variáveis de ambiente na Vercel.
+`src/app/api/contato/route.ts` recebe o formulário e envia por e-mail via Resend (API REST, sem dependência extra). O e-mail chega com "responder para" apontando para quem escreveu.
 
 ## 4. Marca
 
@@ -72,26 +64,50 @@ Os componentes só usam `--font-display` e `--font-sans`, então não é preciso
 ```
 src/
   app/            layout, página, /api/contato, páginas legais, sitemap, robots, ícone e imagem OG
-  content/site.ts toda a copy + dados a preencher
+  content/site.ts toda a copy, equipe, registros e textos legais
   components/
     brand/        Logo, SymbolMark, SymbolDraw (desenho com o scroll), paths gerados
     ui/           Button (magnético), Icon (conjunto próprio, traço 1.5), Reveal, RevealText,
-                  SectionHeading, GoldLine, Photo, Accordion, Pending/Filled
+                  SectionHeading, GoldLine, Photo, Accordion
     interactive/  BrazilMap, Diagnostic, Timeline (GSAP), Cursor, WhatsAppFab, Preloader,
-                  SmoothScroll (Lenis), ContactForm, Counter, HeroParallax
+                  SmoothScroll (Lenis), ContactForm, Lazy (carregamento sob demanda), PurposeTrio, HeroParallax
     sections/     uma seção por arquivo, na ordem do textual
   lib/            whatsapp, eventos (pré-seleção de assunto/UF), esquema do formulário, tokens de movimento
 ```
 
 Os tokens de design (cores, raios, sombras, easing) estão em `src/app/globals.css`, no bloco `@theme`. No Tailwind v4, esse bloco substitui o `tailwind.config`.
 
-## 6. Acessibilidade e movimento
+## 6. Segurança
+
+- **Cabeçalhos HTTP** (`next.config.ts`): Content-Security-Policy restrita ao próprio domínio (sem scripts, fontes ou imagens de terceiros), HSTS, `X-Frame-Options: DENY` (impede o site de ser embutido em outros), `nosniff`, `Referrer-Policy`, `Permissions-Policy` (câmera, microfone, localização etc. bloqueados) e `Cross-Origin-Opener-Policy`.
+- **Formulário / API:**
+  - aceita só `POST` com JSON vindo do próprio site (checagem de `Origin`);
+  - corpo limitado a 16 KB;
+  - limite de 8 envios por IP a cada 10 minutos;
+  - anti-robô: campo invisível (honeypot) e tempo mínimo de preenchimento;
+  - validação rigorosa no servidor (zod), recusando quebras de linha e caracteres de controle (bloqueia injeção em cabeçalhos de e-mail);
+  - conteúdo escapado no HTML do e-mail;
+  - erros genéricos (sem detalhes internos) e nenhum dado pessoal gravado em log em produção.
+- **Sem banco de dados, sem login, sem cookies** e sem ferramentas de rastreamento: superfície de ataque mínima.
+- **Dependências:** `npm audit` sem vulnerabilidades.
+- **Segredos:** a chave do Resend fica só nas variáveis da Vercel; arquivos `.env*` estão no `.gitignore`.
+- O limite por IP fica na memória de cada instância. Para um limite global sob ataque, troque por Upstash/Vercel KV (`src/lib/rate-limit.ts`). A Vercel também tem proteção contra DDoS e um firewall configurável.
+
+## 7. Desempenho e telas
+
+- Testado em 360, 390, 768, 1024, 1280 e 1920 px, sem rolagem lateral. Todos os alvos de toque têm 24 px ou mais.
+- Lighthouse: no computador, desempenho 99; no celular com limitação real de rede e CPU, 87–90. Acessibilidade, boas práticas e SEO: 100.
+- Formulário e diagnóstico só carregam quando o visitante se aproxima deles. O desenho do mapa vem pronto do servidor.
+- Rolagem suave e abertura animada só em computador; no celular a rolagem é a nativa.
+- Fotos servidas em AVIF/WebP no tamanho de cada tela.
+
+## 8. Acessibilidade e movimento
 
 - Com `prefers-reduced-motion`, ficam desligados: preloader, parallax, cursor customizado, rotação do símbolo, rolagem suave e scrub da linha do tempo. Restam apenas fades curtos.
 - Acordeões, diagnóstico (fieldset/legend com rádios nativos) e menu mobile (foco preso, Esc fecha) funcionam por teclado.
 - O mapa tem uma alternativa em `select` de UF e anuncia o estado escolhido numa região *aria-live*.
 
-## 7. Créditos e licenças
+## 9. Créditos e licenças
 
 - Mapa do Brasil por estados: [`@svg-maps/brazil`](https://github.com/VictorCazanave/svg-maps), licença **CC BY 4.0**.
 - Newsreader e Inter: SIL Open Font License, via Fontsource.

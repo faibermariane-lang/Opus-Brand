@@ -5,7 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { diagnostic, ufs } from "@/content/site";
-import { EVENTS } from "@/lib/events";
+import { EVENTS, lastChoice } from "@/lib/events";
 import { EASE } from "@/lib/motion";
 import { interpolate, whatsappUrl } from "@/lib/whatsapp";
 
@@ -19,7 +19,7 @@ const EMPTY: Answers = { phase: "", size: "", uf: "", channel: "" };
  */
 export function Diagnostic() {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Answers>(EMPTY);
+  const [answers, setAnswers] = useState<Answers>(() => ({ ...EMPTY, uf: lastChoice.uf ?? "" }));
   const [dir, setDir] = useState(1);
   const reduce = useReducedMotion();
   const legendRef = useRef<HTMLHeadingElement>(null);

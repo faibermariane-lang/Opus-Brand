@@ -3,7 +3,7 @@ import { Logo } from "@/components/brand/Logo";
 import { preloader } from "@/content/site";
 
 /**
- * Preloader curto (≤ 1,2s), só na primeira visita da sessão, 100% CSS
+ * Preloader curto (≤ 1,2s), só na primeira visita da sessão e só em computador, 100% CSS
  * (não espera JS e não segura o LCP). Pulável: clique ou Esc (script inline no layout).
  * Some com prefers-reduced-motion.
  */
@@ -35,7 +35,7 @@ export function Preloader() {
 }
 
 /** Script inline: marca a sessão e permite pular o preloader. */
-export const preloaderScript = `(function(){try{var d=document.documentElement;if(sessionStorage.getItem('innovare-intro')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('no-intro')}else{sessionStorage.setItem('innovare-intro','1')}}catch(e){document.documentElement.classList.add('no-intro')}
+export const preloaderScript = `(function(){try{var d=document.documentElement;if(sessionStorage.getItem('innovare-intro')||matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(min-width: 1024px) and (pointer: fine)').matches){d.classList.add('no-intro')}else{sessionStorage.setItem('innovare-intro','1')}}catch(e){document.documentElement.classList.add('no-intro')}
 function skip(){document.documentElement.classList.add('no-intro')}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')skip()},{once:true});
 document.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('#preloader'))skip()});})();`;

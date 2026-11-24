@@ -3,68 +3,29 @@
  *
  * Toda a copy do site vive aqui (fonte: "Textual completo do site institucional").
  * Nenhum texto fixo fica dentro dos componentes.
- *
- * ▸ PARA O CLIENTE: preencha os itens do objeto `fill` logo abaixo.
- *   Tudo que estiver `null` aparece no site como um marcador discreto "a preencher".
- *   Nada foi inventado: só o escritório tem esses dados.
- *
- * Nos textos, `{chave}` é substituído pelo valor de `fill[chave]`.
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. DADOS A PREENCHER  ([PREENCHER] do textual)
+// 1. EQUIPE E REGISTROS
 // ─────────────────────────────────────────────────────────────────────────────
-export const fill = {
-  /** URL pública do site, sem barra no final. Ex.: "https://www.innovare.com.br". Também aceita NEXT_PUBLIC_SITE_URL. */
-  siteUrl: null as string | null,
+export const founders = [
+  { name: "Edimara Zanin", role: "Contadora", registry: "CRC 045236/O-09" },
+  { name: "Luziana Barbieri", role: "Administradora", registry: "CRA 33305" },
+];
 
-  /** Fundadoras: nome e cargo de cada uma (legendas das fotos). */
-  founders: [
-    { name: null as string | null, role: null as string | null },
-    { name: null as string | null, role: null as string | null },
-  ],
-
-  /** CNPJ e registro no CRC (rodapé). */
-  cnpj: null as string | null,
-  crc: null as string | null,
-
-  /** Faixa de números — só use dados reais. Para exibir, preencha e ligue `showNumbers`. */
-  yearsActive: null as string | null,
-  companiesServed: null as string | null,
-  statesWithClients: null as string | null,
-
-  /** Texto jurídico da Política de Privacidade (LGPD). Parágrafos separados por linha em branco. */
-  privacyPolicy: null as string | null,
-  /** Texto dos Termos de uso. */
-  termsOfUse: null as string | null,
-};
-
-/** Liga a versão "com dados" da faixa de números (seção 10). Mantenha `false` enquanto não houver números reais. */
-export const showNumbers = false;
-
-/** Rótulos dos marcadores exibidos enquanto um campo não for preenchido. */
-export const fillHints: Record<string, string> = {
-  founders: "nome e cargo de cada fundadora",
-  cnpj: "CNPJ",
-  crc: "CRC",
-  yearsActive: "anos",
-  companiesServed: "nº",
-  statesWithClients: "nº",
-  privacyPolicy: "texto jurídico conforme LGPD",
-  termsOfUse: "texto dos termos de uso",
+export const company = {
+  /** Registro do escritório no Conselho Regional de Contabilidade. */
+  crc: "SC-013110/O",
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. CONTATO
 // ─────────────────────────────────────────────────────────────────────────────
 export const contact = {
-  /**
-   * ATENÇÃO: o número veio como "+55 49 9957-4160" (8 dígitos após o DDD).
-   * Celulares no Brasil têm 9 dígitos. Confirmar antes de publicar.
-   */
   whatsappDisplay: "+55 49 9957-4160",
   whatsappNumber: "554999574160",
   whatsappDefaultMessage: "Olá, Innovare! Vim pelo site e gostaria de conversar sobre a minha empresa.",
+  email: "innovarecontabilidadee@gmail.com",
   instagramHandle: "@innovare_contabilidadee",
   instagramUrl: "https://www.instagram.com/innovare_contabilidadee",
   city: "Chapecó",
@@ -302,13 +263,6 @@ export const audience = {
 };
 
 export const numbers = {
-  /** Versão com dados (só aparece com showNumbers = true). `{chave}` vem de `fill`. */
-  withData: [
-    { value: "{yearsActive}", suffix: "+", label: "anos de atuação" },
-    { value: "{companiesServed}", suffix: "+", label: "empresas atendidas" },
-    { value: "{statesWithClients}", suffix: "", label: "estados com clientes" },
-    { value: "100", suffix: "%", label: "online" },
-  ],
   qualitative: [
     { strong: "Atendimento próximo", text: "com contador de referência" },
     { strong: "Processos digitais", text: "sem papel e sem fila" },
@@ -429,9 +383,11 @@ export const contactSection = {
     success: "Mensagem enviada. Em breve entraremos em contato.",
     fieldError: "Confira este campo para continuarmos.",
     generalError: "Não foi possível enviar agora. Tente novamente ou fale pelo WhatsApp.",
+    whatsappFallback: "Enviar esta mensagem pelo WhatsApp →",
   },
   details: {
     whatsapp: "WhatsApp",
+    email: "E-mail",
     instagram: "Instagram",
     hq: "Sede",
   },
@@ -450,18 +406,126 @@ export const footer = {
   ],
   hqShort: "Chapecó-SC",
   rights: "© {year} Innovare Contabilidade. Todos os direitos reservados.",
-  legal: "CNPJ {cnpj} · CRC {crc}",
+  legal: "CRC {crc}",
   privacy: "Política de Privacidade",
   terms: "Termos de uso",
 };
 
 export const whatsappFab = { label: "Fale com a Innovare" };
 
+export type LegalSection = { heading: string; paragraphs: string[] };
+
 export const legalPages = {
-  privacy: { title: "Política de Privacidade", body: "{privacyPolicy}" },
-  terms: { title: "Termos de uso", body: "{termsOfUse}" },
   back: "Voltar ao início",
+  updated: "Última atualização: novembro de 2026.",
+  privacy: {
+    title: "Política de Privacidade",
+    intro:
+      "Esta política explica como a Innovare Contabilidade trata os dados pessoais de quem visita este site e entra em contato com o escritório, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018, LGPD).",
+    sections: [
+      {
+        heading: "Quem é o controlador",
+        paragraphs: [
+          "Innovare Contabilidade, escritório de contabilidade com sede em Chapecó, Santa Catarina, registrado no CRC sob o nº SC-013110/O. Para qualquer assunto sobre os seus dados, escreva para innovarecontabilidadee@gmail.com.",
+        ],
+      },
+      {
+        heading: "Quais dados coletamos",
+        paragraphs: [
+          "Formulário de contato: nome, empresa (opcional), e-mail, WhatsApp, o assunto escolhido e a mensagem que você escrever.",
+          "Diagnóstico \"Qual é o seu momento?\": as respostas ficam apenas no seu navegador e só são enviadas se você clicar em \"Continuar no WhatsApp\", quando o próprio aplicativo abre com a mensagem pronta.",
+          "Dados técnicos de acesso: como qualquer site, o servidor de hospedagem registra informações técnicas da conexão (como endereço IP, data e hora e navegador) para segurança e funcionamento.",
+          "Não usamos cookies de publicidade nem ferramentas de rastreamento de terceiros. O site guarda apenas uma marcação técnica na sessão do navegador para não repetir a animação de abertura.",
+        ],
+      },
+      {
+        heading: "Para que usamos",
+        paragraphs: [
+          "Responder ao seu contato, entender a necessidade da sua empresa e apresentar uma proposta. A base legal é o seu consentimento, dado ao marcar a caixa do formulário, e os procedimentos preliminares a um contrato solicitados por você (art. 7º, I e V, da LGPD).",
+          "Os dados técnicos de acesso são tratados para manter o site seguro e funcionando, com base no legítimo interesse (art. 7º, IX).",
+          "Não vendemos, alugamos nem compartilhamos seus dados para fins de marketing.",
+        ],
+      },
+      {
+        heading: "Com quem compartilhamos",
+        paragraphs: [
+          "Somente com fornecedores necessários para o site funcionar: o serviço de hospedagem do site e o serviço de envio de e-mail que entrega a sua mensagem à caixa de entrada do escritório. Esses fornecedores podem armazenar dados fora do Brasil, com as garantias previstas na LGPD.",
+          "Se você escolher falar pelo WhatsApp ou pelo Instagram, a conversa passa a seguir também as políticas dessas plataformas.",
+        ],
+      },
+      {
+        heading: "Por quanto tempo guardamos",
+        paragraphs: [
+          "Pelo tempo necessário para responder e acompanhar a sua solicitação. Se você se tornar cliente, os dados passam a seguir os prazos exigidos pela legislação contábil e fiscal. Se não houver relação comercial, você pode pedir a exclusão a qualquer momento.",
+        ],
+      },
+      {
+        heading: "Seus direitos",
+        paragraphs: [
+          "Você pode, a qualquer momento: confirmar se tratamos seus dados, acessá-los, corrigi-los, pedir a anonimização, o bloqueio ou a exclusão, solicitar a portabilidade, saber com quem foram compartilhados e revogar o consentimento (art. 18 da LGPD). Basta escrever para innovarecontabilidadee@gmail.com. Você também pode apresentar reclamação à Autoridade Nacional de Proteção de Dados (ANPD).",
+        ],
+      },
+      {
+        heading: "Segurança",
+        paragraphs: [
+          "O site funciona apenas por conexão criptografada (HTTPS), o formulário tem proteção contra envios automatizados e o acesso às mensagens recebidas é restrito à equipe do escritório.",
+        ],
+      },
+      {
+        heading: "Alterações",
+        paragraphs: ["Esta política pode ser atualizada. A data da última versão fica indicada no fim desta página."],
+      },
+    ] as LegalSection[],
+  },
+  terms: {
+    title: "Termos de uso",
+    intro:
+      "Ao navegar por este site, você concorda com os termos abaixo. Eles valem para o uso do site da Innovare Contabilidade e não substituem o contrato de prestação de serviços firmado com cada cliente.",
+    sections: [
+      {
+        heading: "Conteúdo informativo",
+        paragraphs: [
+          "As informações do site apresentam o escritório e os seus serviços e têm caráter geral. Elas não constituem consultoria contábil, fiscal ou tributária para um caso específico. Cada situação é analisada individualmente, após o contato com a equipe.",
+        ],
+      },
+      {
+        heading: "Contato e propostas",
+        paragraphs: [
+          "O envio de uma mensagem pelo formulário, pelo diagnóstico ou pelo WhatsApp não cria vínculo contratual. Valores e condições são apresentados em proposta formal, depois do diagnóstico inicial.",
+        ],
+      },
+      {
+        heading: "Propriedade intelectual",
+        paragraphs: [
+          "A marca Innovare, o logotipo, o símbolo, os textos e as fotografias do site pertencem à Innovare Contabilidade ou são usados com autorização. Não é permitido reproduzi-los sem autorização prévia por escrito.",
+        ],
+      },
+      {
+        heading: "Uso adequado",
+        paragraphs: [
+          "Não é permitido usar o site para enviar conteúdo ilícito, tentar acessar áreas restritas, sobrecarregar o servidor ou enviar mensagens automatizadas.",
+        ],
+      },
+      {
+        heading: "Links externos",
+        paragraphs: [
+          "O site tem links para serviços de terceiros, como WhatsApp e Instagram. A Innovare não responde pelo conteúdo nem pelas políticas dessas plataformas.",
+        ],
+      },
+      {
+        heading: "Dados pessoais",
+        paragraphs: ["O tratamento de dados pessoais segue a nossa Política de Privacidade."],
+      },
+      {
+        heading: "Foro",
+        paragraphs: [
+          "Estes termos seguem a legislação brasileira. Fica eleito o foro da comarca de Chapecó, Santa Catarina, ressalvados os direitos do consumidor.",
+        ],
+      },
+    ] as LegalSection[],
+  },
 };
+
 
 export const preloader = { skip: "Pular" };
 

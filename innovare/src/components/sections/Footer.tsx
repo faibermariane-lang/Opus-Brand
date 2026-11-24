@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { SymbolMark } from "@/components/brand/SymbolMark";
-import { Filled } from "@/components/ui/Pending";
-import { contact, footer, nav } from "@/content/site";
+import { company, contact, footer, nav } from "@/content/site";
+import { interpolate } from "@/lib/whatsapp";
 import { whatsappUrl } from "@/lib/whatsapp";
 
 export function Footer({ homePrefix = "" }: { homePrefix?: string }) {
@@ -41,6 +41,7 @@ export function Footer({ homePrefix = "" }: { homePrefix?: string }) {
             <ul className="mt-6 space-y-3 text-cream/75">
               <li><a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-underline hover:text-cream">WhatsApp {contact.whatsappDisplay}</a></li>
               <li><a href={contact.instagramUrl} target="_blank" rel="noopener noreferrer" className="link-underline hover:text-cream">{contact.instagramHandle}</a></li>
+              <li><a href={`mailto:${contact.email}`} className="link-underline break-all hover:text-cream">{contact.email}</a></li>
               <li>{footer.hqShort}</li>
             </ul>
           </div>
@@ -49,12 +50,12 @@ export function Footer({ homePrefix = "" }: { homePrefix?: string }) {
         <div className="gold-hairline mt-20 opacity-30" />
         <div className="mt-8 flex flex-col gap-4 text-sm text-cream/55 md:flex-row md:items-center md:justify-between">
           <div className="space-y-1">
-            <p><Filled text={footer.rights} extra={{ year: String(new Date().getFullYear()) }} /></p>
-            <p><Filled text={footer.legal} /></p>
+            <p>{interpolate(footer.rights, { year: String(new Date().getFullYear()) })}</p>
+            <p>{interpolate(footer.legal, { crc: company.crc })}</p>
           </div>
           <div className="flex gap-6">
-            <Link href="/politica-de-privacidade" className="link-underline hover:text-cream">{footer.privacy}</Link>
-            <Link href="/termos-de-uso" className="link-underline hover:text-cream">{footer.terms}</Link>
+            <Link href="/politica-de-privacidade" className="link-underline inline-block py-1.5 hover:text-cream">{footer.privacy}</Link>
+            <Link href="/termos-de-uso" className="link-underline inline-block py-1.5 hover:text-cream">{footer.terms}</Link>
           </div>
         </div>
       </div>
